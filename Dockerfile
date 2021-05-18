@@ -24,8 +24,6 @@ FROM alpine
 WORKDIR /app
 
 COPY --from=builder /build/apiserver .
-RUN mkdir configs
-COPY --from=builder /build/configs/apiserver.toml /app/configs/
 
 # Export necessary port
 #EXPOSE 3000
