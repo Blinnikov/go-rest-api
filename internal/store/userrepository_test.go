@@ -9,8 +9,9 @@ import (
 )
 
 func TestUserRepository_Create(t *testing.T) {
-	s, teardown := store.TestStore(t, databaseURL)
+	db, teardown := store.TestDB(t, databaseURL)
 	defer teardown("users")
+	s := store.New(db)
 
 	u, err := s.User().Create(model.TestUser(t))
 
@@ -19,8 +20,9 @@ func TestUserRepository_Create(t *testing.T) {
 }
 
 func TestUserRepository_FindByEmail_ReturnsErrorForNoUser(t *testing.T) {
-	s, teardown := store.TestStore(t, databaseURL)
+	db, teardown := store.TestDB(t, databaseURL)
 	defer teardown("users")
+	s := store.New(db)
 
 	email := "Toto.Cutugno@sanremo.it"
 	_, err := s.User().FindByEmail(email)
@@ -28,8 +30,9 @@ func TestUserRepository_FindByEmail_ReturnsErrorForNoUser(t *testing.T) {
 }
 
 func TestUserRepository_FindByEmail_ReturnsUser(t *testing.T) {
-	s, teardown := store.TestStore(t, databaseURL)
+	db, teardown := store.TestDB(t, databaseURL)
 	defer teardown("users")
+	s := store.New(db)
 
 	email := "Toto.Cutugno@sanremo.it"
 	tu := model.TestUser(t)
