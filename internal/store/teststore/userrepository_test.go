@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/blinnikov/go-rest-api/internal/app/model"
+	"github.com/blinnikov/go-rest-api/internal/store"
 	"github.com/blinnikov/go-rest-api/internal/store/teststore"
 	"github.com/stretchr/testify/assert"
 )
@@ -21,7 +22,7 @@ func TestUserRepository_FindByEmail_ReturnsErrorForNoUser(t *testing.T) {
 
 	email := "Toto.Cutugno@sanremo.it"
 	_, err := s.User().FindByEmail(email)
-	assert.Error(t, err)
+	assert.EqualError(t, err, store.ErrRecordNotFound.Error())
 }
 
 func TestUserRepository_FindByEmail_ReturnsUser(t *testing.T) {
