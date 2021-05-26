@@ -25,6 +25,14 @@ func TestUserRepository_FindByEmail_ReturnsErrorForNoUser(t *testing.T) {
 	assert.EqualError(t, err, store.ErrRecordNotFound.Error())
 }
 
+func TestUserRepository_Find_ReturnsErrorForNoUser(t *testing.T) {
+	s := teststore.New()
+
+	id := 100500
+	_, err := s.User().Find(id)
+	assert.EqualError(t, err, store.ErrRecordNotFound.Error())
+}
+
 func TestUserRepository_FindByEmail_ReturnsUser(t *testing.T) {
 	s := teststore.New()
 
@@ -37,4 +45,17 @@ func TestUserRepository_FindByEmail_ReturnsUser(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, u)
 	assert.Equal(t, email, u.Email)
+}
+
+func TestUserRepository_Find_ReturnsUser(t *testing.T) {
+	s := teststore.New()
+
+	tu := model.TestUser(t)
+	s.User().Create(tu)
+	id := tu.ID
+
+	u, err := s.User().Find(id)
+	assert.NoError(t, err)
+	assert.NotNil(t, u)
+	assert.Equal(t, id, u.ID)
 }
