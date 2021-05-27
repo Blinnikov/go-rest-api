@@ -17,3 +17,7 @@ Not to forget links:
  - Get current user name (passed by middleware through context):
 
     `curl --request GET -b cookie.txt --verbose http://localhost:8080/private/whoami`
+
+ - Headers:
+
+   `curl --request GET -b cookie.txt -H "Origin: blinnikov.com" --verbose http://localhost:8080/private/whoami`
