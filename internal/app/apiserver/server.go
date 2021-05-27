@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/blinnikov/go-rest-api/internal/app/model"
 	"github.com/blinnikov/go-rest-api/internal/store"
@@ -54,6 +55,7 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (s *server) configureRouter() {
 	s.router.Use(s.setRequestID)
+	s.router.Use(s.logRequest)
 	s.router.Use(handlers.CORS(handlers.AllowedOrigins([]string{"*"})))
 	s.router.HandleFunc("/users", s.handleUsersCreate()).Methods("POST")
 	s.router.HandleFunc("/sessions", s.handleSessionsCreate()).Methods("POST")
@@ -68,6 +70,20 @@ func (s *server) setRequestID(next http.Handler) http.Handler {
 		id := uuid.New().String()
 		w.Header().Set("X-Request-ID", id)
 		next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), ctxKeyRequestID, id)))
+	})
+}
+
+func (s *server) logRequest(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		logger := s.logger.WithFields(logrus.Fields{
+			"remote_addr": r.RemoteAddr,
+			"request_id":  r.Context().Value(ctxKeyRequestID),
+		})
+		logger.Infof("Started %s %s", r.Method, r.RequestURI)
+
+		start := time.Now()
+		next.ServeHTTP(w, r)
+		logger.Infof("Completed in %v", time.Since(start))
 	})
 }
 
