@@ -15,6 +15,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type TestCase struct {
+	name         string
+	payload      interface{}
+	expectedCode int
+}
+
 func TestServer_AuthenticateUser(t *testing.T) {
 	store := teststore.New()
 	u := model.TestUser(t)
@@ -61,11 +67,7 @@ func TestServer_AuthenticateUser(t *testing.T) {
 
 func TestServer_HandleUsersCreate(t *testing.T) {
 	s := newServer(teststore.New(), sessions.NewCookieStore([]byte("test")))
-	testCases := []struct {
-		name         string
-		payload      interface{}
-		expectedCode int
-	}{
+	testCases := []TestCase{
 		{
 			name: "valid",
 			payload: map[string]string{
@@ -89,14 +91,7 @@ func TestServer_HandleUsersCreate(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			rec := httptest.NewRecorder()
-			b := &bytes.Buffer{}
-			json.NewEncoder(b).Encode(tc.payload)
-			req, _ := http.NewRequest(http.MethodPost, "/users", b)
-			s.ServeHTTP(rec, req)
-			assert.Equal(t, tc.expectedCode, rec.Code)
-		})
+		t.Run(tc.name, runTestCase(s, tc, "/users"))
 	}
 }
 
@@ -106,11 +101,7 @@ func TestServer_HandleSessionsCreate(t *testing.T) {
 	store.User().Create(u)
 	s := newServer(store, sessions.NewCookieStore([]byte("test")))
 
-	testCases := []struct {
-		name         string
-		payload      interface{}
-		expectedCode int
-	}{
+	testCases := []TestCase{
 		{
 			name: "valid",
 			payload: map[string]string{
@@ -143,13 +134,17 @@ func TestServer_HandleSessionsCreate(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			rec := httptest.NewRecorder()
-			b := &bytes.Buffer{}
-			json.NewEncoder(b).Encode(tc.payload)
-			req, _ := http.NewRequest(http.MethodPost, "/sessions", b)
-			s.ServeHTTP(rec, req)
-			assert.Equal(t, tc.expectedCode, rec.Code)
-		})
+		t.Run(tc.name, runTestCase(s, tc, "/sessions"))
+	}
+}
+
+func runTestCase(s *server, tc TestCase, path string) func(*testing.T) {
+	return func(t *testing.T) {
+		rec := httptest.NewRecorder()
+		b := &bytes.Buffer{}
+		json.NewEncoder(b).Encode(tc.payload)
+		req, _ := http.NewRequest(http.MethodPost, path, b)
+		s.ServeHTTP(rec, req)
+		assert.Equal(t, tc.expectedCode, rec.Code)
 	}
 }
