@@ -21,3 +21,28 @@ Not to forget links:
  - Headers:
 
    `curl --request GET -b cookie.txt -H "Origin: blinnikov.com" --verbose http://localhost:8080/private/whoami`
+
+### Serving through TLS
+- install `openssl`
+   ``` bash
+   brew update
+   brew install openssl
+   ```
+- genereate Self-Signed Certificate
+   ``` bash
+   openssl req -newkey rsa:4096 \
+            -x509 \
+            -sha256 \
+            -days 3650 \
+            -nodes \
+            -out go-rest-api.crt \
+            -keyout go-rest-api.key
+   ```
+- use `http.ListenAndServeTLS`
+   ``` go
+   return http.ListenAndServe(config.BindAddr, srv)
+   ```
+   ->
+   ``` go
+   return http.ListenAndServeTLS(config.BindAddr, "go-rest-api.crt", "go-rest-api.key", srv)
+   ```

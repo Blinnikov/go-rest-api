@@ -9,9 +9,10 @@ services:
     depends_on:
       - postgres
     ports:
-      - 3000:8080
+      - 3000:8443
     volumes:
       - ./configs/apiserver.toml:/app/configs/apiserver.toml
+      # TODO: Map certificates to container
     networks:
       - restapi
 
