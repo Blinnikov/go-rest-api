@@ -57,6 +57,7 @@ func (s *server) configureRouter() {
 	s.router.Use(s.setRequestID)
 	s.router.Use(s.logRequest)
 	s.router.Use(handlers.CORS(handlers.AllowedOrigins([]string{"*"})))
+	s.router.HandleFunc("/time", s.handleTime()).Methods("GET")
 	s.router.HandleFunc("/users", s.handleUsersCreate()).Methods("POST")
 	s.router.HandleFunc("/sessions", s.handleSessionsCreate()).Methods("POST")
 
@@ -114,6 +115,13 @@ func (s *server) authenticateUser(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), ctxKeyUser, u)))
 	})
+}
+
+func (s *server) handleTime() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		time := time.Now()
+		s.respond(w, r, http.StatusOK, time)
+	}
 }
 
 func (s *server) handleWhoami() http.HandlerFunc {
