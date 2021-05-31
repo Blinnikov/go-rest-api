@@ -36,10 +36,10 @@ type server struct {
 	sessionStore sessions.Store
 }
 
-func newServer(store store.Store, sessionStore sessions.Store) *server {
+func newServer(logger *logrus.Logger, store store.Store, sessionStore sessions.Store) *server {
 	s := &server{
 		router:       mux.NewRouter(),
-		logger:       logrus.New(),
+		logger:       logger,
 		store:        store,
 		sessionStore: sessionStore,
 	}

@@ -2,15 +2,15 @@ package apiserver
 
 import (
 	"database/sql"
-	"log"
 	"net/http"
 
 	"github.com/blinnikov/go-rest-api/internal/store/sqlstore"
 	"github.com/gorilla/sessions"
+	"github.com/sirupsen/logrus"
 )
 
-func Start(config *Config) error {
-	log.Printf("Starting apiserver with db %s", config.DatabaseURL)
+func Start(config *Config, logger *logrus.Logger) error {
+	logger.Printf("Starting apiserver with db %s", config.DatabaseURL)
 	db, err := newDB(config.DatabaseURL)
 	if err != nil {
 		return err
@@ -20,7 +20,7 @@ func Start(config *Config) error {
 
 	store := sqlstore.New(db)
 	sessionStore := sessions.NewCookieStore([]byte(config.SessionKey))
-	srv := newServer(store, sessionStore)
+	srv := newServer(logger, store, sessionStore)
 
 	certFile := "certs/go-rest-api.crt"
 	keyFile := "certs/go-rest-api.key"
