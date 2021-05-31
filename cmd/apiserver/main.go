@@ -17,6 +17,7 @@ func init() {
 }
 
 func main() {
+	log.Println("Main program start")
 	flag.Parse()
 
 	config := apiserver.NewConfig()

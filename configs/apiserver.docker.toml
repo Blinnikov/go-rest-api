@@ -1,0 +1,4 @@
+bind_addr = ":8443"
+log_level = "debug"
+database_url = "host=postgres dbname=restapi_dev sslmode=disable user=postgres password=changeme"
+session_key = "idunnowhattowritehere"

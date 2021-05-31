@@ -2,6 +2,7 @@ package apiserver
 
 import (
 	"database/sql"
+	"log"
 	"net/http"
 
 	"github.com/blinnikov/go-rest-api/internal/store/sqlstore"
@@ -9,6 +10,7 @@ import (
 )
 
 func Start(config *Config) error {
+	log.Printf("Starting apiserver with db %s", config.DatabaseURL)
 	db, err := newDB(config.DatabaseURL)
 	if err != nil {
 		return err

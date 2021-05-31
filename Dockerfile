@@ -28,4 +28,9 @@ COPY --from=builder /build/apiserver .
 # Export necessary port
 #EXPOSE 3000
 
+# RUN apk update && apk upgrade \
+# && apk add --no-cache ca-certificates
+
+# to trust root certificate if we're going to call other services from this one
+# RUN update-ca-certificates
 ENTRYPOINT ./apiserver
