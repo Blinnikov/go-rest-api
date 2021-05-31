@@ -20,7 +20,9 @@ func Start(config *Config) error {
 	sessionStore := sessions.NewCookieStore([]byte(config.SessionKey))
 	srv := newServer(store, sessionStore)
 
-	return http.ListenAndServeTLS(config.BindAddr, "go-rest-api.crt", "go-rest-api.key", srv)
+	certFile := "certs/go-rest-api.crt"
+	keyFile := "certs/go-rest-api.key"
+	return http.ListenAndServeTLS(config.BindAddr, certFile, keyFile, srv)
 }
 
 func newDB(databaseURL string) (*sql.DB, error) {
