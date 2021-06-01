@@ -12,6 +12,7 @@ import (
 	"github.com/blinnikov/go-rest-api/internal/store/teststore"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
+	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -27,7 +28,7 @@ func TestServer_AuthenticateUser(t *testing.T) {
 	store.User().Create(u)
 
 	secretKey := []byte("secret")
-	s := newServer(store, sessions.NewCookieStore(secretKey))
+	s := newServer(logrus.New(), store, sessions.NewCookieStore(secretKey))
 	sc := securecookie.New(secretKey, nil)
 	handler := http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
 		rw.WriteHeader(http.StatusOK)
@@ -66,7 +67,7 @@ func TestServer_AuthenticateUser(t *testing.T) {
 }
 
 func TestServer_HandleUsersCreate(t *testing.T) {
-	s := newServer(teststore.New(), sessions.NewCookieStore([]byte("test")))
+	s := newServer(logrus.New(), teststore.New(), sessions.NewCookieStore([]byte("test")))
 	testCases := []TestCase{
 		{
 			name: "valid",
@@ -99,7 +100,7 @@ func TestServer_HandleSessionsCreate(t *testing.T) {
 	u := model.TestUser(t)
 	store := teststore.New()
 	store.User().Create(u)
-	s := newServer(store, sessions.NewCookieStore([]byte("test")))
+	s := newServer(logrus.New(), store, sessions.NewCookieStore([]byte("test")))
 
 	testCases := []TestCase{
 		{
