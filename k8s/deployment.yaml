@@ -14,9 +14,16 @@ spec:
       containers:
       - name: go-rest-api
         image: ibazzva/go-rest-api:latest
+        volumeMounts:
+          - mountPath: "/app/configs"
+            name: config
         resources:
           limits:
             memory: "128Mi"
             cpu: "500m"
         ports:
         - containerPort: 8443
+      volumes:
+        - name: config
+          configMap:
+            name: go-rest-api-config
