@@ -16,7 +16,13 @@ spec:
         image: ibazzva/go-rest-api:latest
         volumeMounts:
           - mountPath: "/app/configs"
-            name: config
+            name: app-config
+          - mountPath: "/app/certs/go-rest-api.crt"
+            subPath: "go-rest-api.crt"
+            name: crt-config
+          - mountPath: "/app/certs/go-rest-api.key"
+            subPath: "go-rest-api.key"
+            name: key-config
         resources:
           limits:
             memory: "128Mi"
@@ -24,6 +30,12 @@ spec:
         ports:
         - containerPort: 8443
       volumes:
-        - name: config
+        - name: app-config
           configMap:
             name: go-rest-api-config
+        - name: crt-config
+          configMap:
+            name: go-rest-api-crt-config
+        - name: key-config
+          configMap:
+            name: go-rest-api-key-config
