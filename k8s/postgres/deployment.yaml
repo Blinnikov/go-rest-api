@@ -1,12 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgresql
-  labels:
-    app: postgres
+  name: postgres
 spec:
-  strategy:
-    type: Recreate
+  replicas: 1
   selector:
     matchLabels:
       app: postgres
@@ -14,29 +11,24 @@ spec:
     metadata:
       labels:
         app: postgres
-        #tier: postgreSQL
     spec:
       containers:
-        - image: postgres
-          name: postgresql
-          env:
-            - name: POSTGRES_USER
-              value: postgres
-            - name: POSTGRES_DB
-              value: postgres_production
-            - name: POSTGRES_PASSWORD
-              value: changeme
+        - name: postgres
+          image: postgres:latest
+          imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 5432
-              name: postgresql
+          envFrom:
+            - configMapRef:
+                name: postgres-config
           volumeMounts:
-            - name: postgresql
+            - name: postgredb
               mountPath: /var/lib/postgresql/data
           resources:
             limits:
               memory: "128Mi"
               cpu: "500m"
       volumes:
-        - name: postgresql
+        - name: postgredb
           persistentVolumeClaim:
-            claimName: postgres-claim
+            claimName: postgres-pv-claim

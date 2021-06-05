@@ -5,5 +5,5 @@ metadata:
 data:
   apiserver.toml: |-
     bind_addr = ":8443"
-    database_url = "host=postgres dbname=postgres_production sslmode=disable user=postgres password=changeme"
+    database_url = "host=postgres dbname=restapi_k8s sslmode=disable user=postgres password=changeme"
     session_key = "idunnowhattowritehere"
