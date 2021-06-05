@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: seq-pv-claim
+  labels:
+    app: seq
+spec:
+  storageClassName: seqqy
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
