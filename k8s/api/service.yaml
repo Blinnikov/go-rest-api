@@ -7,6 +7,8 @@ metadata:
 spec:
   type: NodePort
   ports:
-   - port: 3000
+  - port: 3000
+    targetPort: 8443
+    nodePort: 30443
   selector:
    app: go-rest-api
