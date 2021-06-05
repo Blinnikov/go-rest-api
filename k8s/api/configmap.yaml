@@ -6,4 +6,5 @@ data:
   apiserver.toml: |-
     bind_addr = ":8443"
     database_url = "host=postgres dbname=restapi_k8s sslmode=disable user=postgres password=changeme"
+    seq_url = "http://seq"
     session_key = "idunnowhattowritehere"
