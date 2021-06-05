@@ -46,3 +46,18 @@ Not to forget links:
    ``` go
    return http.ListenAndServeTLS(config.BindAddr, "go-rest-api.crt", "go-rest-api.key", srv)
    ```
+
+### Deploy to local k8s
+- Give `create-configmap.sh` script execution permissions
+   ``` bash
+   chmod +x ./k8s/create-configmap.sh 
+   ```
+- Run this script to create config maps for certificate files
+   ``` bash
+   ./k8s/create-configmap.sh
+   ```
+
+- Install all kubernetes objects
+   ``` bash
+   kubectl apply -f ./k8s --recursive
+   ```
