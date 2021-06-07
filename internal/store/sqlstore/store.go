@@ -29,3 +29,7 @@ func (s *Store) User() store.UserRepository {
 
 	return s.userRepository
 }
+
+func (s *Store) WriteTime(time string) {
+	s.db.Exec("INSERT INTO time (time) VALUES ($1)", time)
+}

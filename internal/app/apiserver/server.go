@@ -120,6 +120,9 @@ func (s *server) authenticateUser(next http.Handler) http.Handler {
 func (s *server) handleTime() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		time := time.Now()
+		if r.URL.Query().Get("toDb") == "true" {
+			s.store.WriteTime(time.String())
+		}
 		s.respond(w, r, http.StatusOK, time)
 	}
 }
