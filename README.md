@@ -71,3 +71,12 @@ Not to forget links:
    ``` bash
    kubectl apply -f ./k8s --recursive
    ```
+
+### Push Docker images
+   ```bash
+   docker build -t go-rest-api .
+   docker image tag go-rest-api ibazzva/go-rest-api:latest
+   docker image tag go-rest-api ibazzva/go-rest-api:1.0.0 
+   docker login
+   docker push ibazzva/go-rest-api -a
+   ```
