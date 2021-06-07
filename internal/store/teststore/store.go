@@ -1,6 +1,8 @@
 package teststore
 
 import (
+	"log"
+
 	"github.com/blinnikov/go-rest-api/internal/app/model"
 	"github.com/blinnikov/go-rest-api/internal/store"
 )
@@ -24,4 +26,8 @@ func (s *Store) User() store.UserRepository {
 	}
 
 	return s.userRepository
+}
+
+func (s *Store) WriteTime(time string) {
+	log.Println(time)
 }
