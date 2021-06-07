@@ -22,6 +22,16 @@ Not to forget links:
 
    `curl --request GET -b cookie.txt -H "Origin: blinnikov.com" --verbose http://localhost:8080/private/whoami`
 
+### Migrations
+- create
+   ``` bash
+   migrate create -ext sql -dir migrations migration_name  
+   ```
+- run migration
+   ``` bash
+    migrate -path migrations -database "postgresql://postgres:changeme@localhost/restapi_test?sslmode=disable" up
+   ```
+
 ### Serving through TLS
 - install `openssl`
    ``` bash
