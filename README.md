@@ -80,3 +80,12 @@ Not to forget links:
    docker login
    docker push ibazzva/go-rest-api -a
    ```
+   OR
+
+   ```bash
+   docker build -t go-rest-api .
+   docker image tag go-rest-api ghcr.io/blinnikov/go-rest-api:latest
+   docker image tag go-rest-api ghcr.io/blinnikov/go-rest-api:1.0.0 
+   echo $CR_PAT | docker login ghcr.io -u blinnikov --password-stdin
+   docker push ghcr.io/blinnikov/go-rest-api -a
+   ```
