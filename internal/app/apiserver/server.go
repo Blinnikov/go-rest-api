@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/blinnikov/go-rest-api/internal/app/apiserver/helpers"
+	"github.com/blinnikov/go-rest-api/internal/app/apiserver/middleware"
 	"github.com/blinnikov/go-rest-api/internal/app/model"
 	"github.com/blinnikov/go-rest-api/internal/store"
 	"github.com/google/uuid"
@@ -17,17 +19,13 @@ import (
 )
 
 const (
-	sessionName        = "go-rest-api"
-	ctxKeyUser  ctxKey = iota
-	ctxKeyRequestID
+	sessionName = "go-rest-api"
 )
 
 var (
 	errIncorrectEmailOrPassword = errors.New("incorrect email or password")
 	errNotAuthenticated         = errors.New("not authenticated")
 )
-
-type ctxKey int8
 
 type server struct {
 	router       *mux.Router
@@ -70,27 +68,12 @@ func (s *server) setRequestID(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		id := uuid.New().String()
 		w.Header().Set("X-Request-ID", id)
-		next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), ctxKeyRequestID, id)))
+		next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), helpers.CtxKeyRequestID, id)))
 	})
 }
 
 func (s *server) logRequest(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		logger := s.logger.WithFields(logrus.Fields{
-			"remote_addr": r.RemoteAddr,
-			"request_id":  r.Context().Value(ctxKeyRequestID),
-		})
-		logger.Infof("Started %s %s", r.Method, r.RequestURI)
-
-		start := time.Now()
-		rw := &responseWriter{w, http.StatusOK}
-		next.ServeHTTP(rw, r)
-		logger.Infof("Completed with %d %s in %v",
-			rw.statusCode,
-			http.StatusText(rw.statusCode),
-			time.Since(start),
-		)
-	})
+	return &middleware.LogRequestMiddleware{next, s.logger}
 }
 
 func (s *server) authenticateUser(next http.Handler) http.Handler {
@@ -113,7 +96,7 @@ func (s *server) authenticateUser(next http.Handler) http.Handler {
 			return
 		}
 
-		next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), ctxKeyUser, u)))
+		next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), helpers.CtxKeyUser, u)))
 	})
 }
 
@@ -129,7 +112,7 @@ func (s *server) handleTime() http.HandlerFunc {
 
 func (s *server) handleWhoami() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		s.respond(w, r, http.StatusOK, r.Context().Value(ctxKeyUser).(*model.User))
+		s.respond(w, r, http.StatusOK, r.Context().Value(helpers.CtxKeyUser).(*model.User))
 	}
 }
 
