@@ -11,7 +11,6 @@ import (
 	"github.com/blinnikov/go-rest-api/internal/app/apiserver/middleware"
 	"github.com/blinnikov/go-rest-api/internal/app/model"
 	"github.com/blinnikov/go-rest-api/internal/store"
-	"github.com/google/uuid"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -65,15 +64,11 @@ func (s *server) configureRouter() {
 }
 
 func (s *server) setRequestID(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		id := uuid.New().String()
-		w.Header().Set("X-Request-ID", id)
-		next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), helpers.CtxKeyRequestID, id)))
-	})
+	return &middleware.LogRequestMiddleware{Next: next}
 }
 
 func (s *server) logRequest(next http.Handler) http.Handler {
-	return &middleware.LogRequestMiddleware{next, s.logger}
+	return &middleware.LogRequestMiddleware{Next: next, Logger: s.logger}
 }
 
 func (s *server) authenticateUser(next http.Handler) http.Handler {
