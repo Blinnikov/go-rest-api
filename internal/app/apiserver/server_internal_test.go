@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/blinnikov/go-rest-api/internal/app/model"
 	"github.com/blinnikov/go-rest-api/internal/store/teststore"
@@ -148,4 +149,19 @@ func runTestCase(s *server, tc TestCase, path string) func(*testing.T) {
 		s.ServeHTTP(rec, req)
 		assert.Equal(t, tc.expectedCode, rec.Code)
 	}
+}
+
+func TestServer_HandleTime(t *testing.T) {
+	store := teststore.New()
+	s := newServer(logrus.New(), store, sessions.NewCookieStore())
+
+	rec := httptest.NewRecorder()
+	req, _ := http.NewRequest(http.MethodGet, "/time", nil)
+	s.ServeHTTP(rec, req)
+
+	dateValue := rec.Body.String()
+	dateNow := time.Now()
+
+	assert.Equal(t, http.StatusOK, rec.Code)
+	assert.Contains(t, dateValue, fmt.Sprintf("%v-%02d-%v", dateNow.Year(), dateNow.Month(), dateNow.Day()))
 }
