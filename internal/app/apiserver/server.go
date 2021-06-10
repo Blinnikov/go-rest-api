@@ -64,7 +64,7 @@ func (s *server) configureRouter() {
 }
 
 func (s *server) setRequestID(next http.Handler) http.Handler {
-	return &middleware.LogRequestMiddleware{Next: next}
+	return &middleware.SetRequestIdMiddleware{Next: next}
 }
 
 func (s *server) logRequest(next http.Handler) http.Handler {
