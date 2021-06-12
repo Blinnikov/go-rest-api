@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: go-rest-api
-        image: ghcr.io/blinnikov/go-rest-api:1.0.0
+        image: ghcr.io/blinnikov/go-rest-api:1.0.1
         volumeMounts:
           - mountPath: "/app/configs"
             name: app-config

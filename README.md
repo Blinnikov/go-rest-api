@@ -74,9 +74,9 @@ Not to forget links:
 
 ### Push Docker images
    ```bash
-   docker build -t go-rest-api .
-   docker image tag go-rest-api ibazzva/go-rest-api:latest
-   docker image tag go-rest-api ibazzva/go-rest-api:1.0.0 
+   docker build -t go-rest-api-ibz .
+   docker image tag go-rest-api-ibz ibazzva/go-rest-api:latest
+   docker image tag go-rest-api-ibz ibazzva/go-rest-api:1.0.1 
    docker login
    docker push ibazzva/go-rest-api -a
    ```
@@ -85,7 +85,7 @@ Not to forget links:
    ```bash
    docker build -t go-rest-api .
    docker image tag go-rest-api ghcr.io/blinnikov/go-rest-api:latest
-   docker image tag go-rest-api ghcr.io/blinnikov/go-rest-api:1.0.0 
+   docker image tag go-rest-api ghcr.io/blinnikov/go-rest-api:1.0.1 
    echo $CR_PAT | docker login ghcr.io -u blinnikov --password-stdin
    docker push ghcr.io/blinnikov/go-rest-api -a
    ```
