@@ -3,6 +3,7 @@ package apiserver
 import (
 	"database/sql"
 	"net/http"
+	"strings"
 
 	"github.com/blinnikov/go-rest-api/internal/store/sqlstore"
 	"github.com/gorilla/sessions"
@@ -10,7 +11,8 @@ import (
 )
 
 func Start(config *Config, logger *logrus.Logger) error {
-	logger.Printf("Starting apiserver with db %s", config.DatabaseURL)
+	address := strings.Split(config.DatabaseURL, "password")[0]
+	logger.Printf("Starting apiserver with db %s", address)
 	db, err := newDB(config.DatabaseURL)
 	if err != nil {
 		return err
