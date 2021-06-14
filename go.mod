@@ -15,6 +15,7 @@ require (
 	github.com/lib/pq v1.10.2
 	github.com/nullseed/logruseq v0.0.0-20191022112445-275e5c09bb04
 	github.com/sirupsen/logrus v1.8.1
+	github.com/streadway/amqp v1.0.0 // indirect
 	github.com/stretchr/testify v1.7.0
 	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a
 	golang.org/x/sys v0.0.0-20210601080250-7ecdf8ef093b // indirect
