@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/blinnikov/go-rest-api/internal/bus"
 	"github.com/blinnikov/go-rest-api/internal/store/sqlstore"
 	"github.com/gorilla/sessions"
 	"github.com/sirupsen/logrus"
@@ -23,6 +24,8 @@ func Start(config *Config, logger *logrus.Logger) error {
 	store := sqlstore.New(db)
 	sessionStore := sessions.NewCookieStore([]byte(config.SessionKey))
 	srv := newServer(logger, store, sessionStore)
+
+	bus.SendMessage()
 
 	certFile := "certs/go-rest-api.crt"
 	keyFile := "certs/go-rest-api.key"
