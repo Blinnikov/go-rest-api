@@ -8,6 +8,7 @@ services:
       context: .
     depends_on:
       - postgres
+      - rabbit1
       #- seq
     ports:
       - 3000:8443
@@ -48,6 +49,8 @@ services:
       - "5672:5672"
     labels:
       NAME: "rabbitmq1"
+    networks:
+      - restapi
 
   postgres:
     container_name: postgres_container
