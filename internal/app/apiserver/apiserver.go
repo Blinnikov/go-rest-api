@@ -11,7 +11,7 @@ import (
 )
 
 func Start(config *Config, logger *logrus.Logger) error {
-	address := strings.Split(config.DatabaseURL, "password")[0]
+	address := strings.Split(config.DatabaseURL, " password")[0]
 	logger.Printf("Starting apiserver with db %s", address)
 	db, err := newDB(config.DatabaseURL)
 	if err != nil {
