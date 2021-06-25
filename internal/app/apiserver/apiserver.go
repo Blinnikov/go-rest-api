@@ -25,7 +25,13 @@ func Start(config *Config, logger *logrus.Logger) error {
 	sessionStore := sessions.NewCookieStore([]byte(config.SessionKey))
 	srv := newServer(logger, store, sessionStore)
 
-	bus.SendMessage()
+	conn, ch, q := bus.GetQueue()
+	defer conn.Close()
+	defer ch.Close()
+
+	msg := "Golang is awesome - Keep Moving Forward!"
+	bus.SendTextMessage(ch, q.Name, msg)
+	logger.Printf(" [x] Congrats, sending message: %s", msg)
 
 	certFile := "certs/go-rest-api.crt"
 	keyFile := "certs/go-rest-api.key"

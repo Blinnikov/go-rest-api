@@ -12,15 +12,13 @@ func failOnError(err error, msg string) {
 	}
 }
 
-func SendMessage() {
+func GetQueue() (*amqp.Connection, *amqp.Channel, *amqp.Queue) {
 	// TODO: Get from configuration
 	conn, err := amqp.Dial("amqp://rabbitmq:rabbitmq@rabbit1:5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
-	defer conn.Close()
 
 	ch, err := conn.Channel()
 	failOnError(err, "Failed to open a channel")
-	defer ch.Close()
 
 	// We create a Queue to send the message to.
 	q, err := ch.QueueDeclare(
@@ -33,18 +31,22 @@ func SendMessage() {
 	)
 	failOnError(err, "Failed to declare a queue")
 
-	// We set the payload for the message.
-	body := "Golang is awesome - Keep Moving Forward!"
-	err = ch.Publish(
-		"",     // exchange
-		q.Name, // routing key
-		false,  // mandatory
-		false,  // immediate
+	return conn, ch, &q
+}
+
+func SendTextMessage(ch *amqp.Channel, routingKey string, msg string) {
+	sendMessage(ch, routingKey, "text/plain", []byte(msg))
+}
+
+func sendMessage(ch *amqp.Channel, routingKey string, contentType string, msg []byte) {
+	err := ch.Publish(
+		"",         // exchange
+		routingKey, // routing key
+		false,      // mandatory
+		false,      // immediate
 		amqp.Publishing{
-			ContentType: "text/plain",
-			Body:        []byte(body),
+			ContentType: contentType,
+			Body:        msg,
 		})
 	failOnError(err, "Failed to publish a message")
-
-	log.Printf(" [x] Congrats, sending message: %s", body)
 }
