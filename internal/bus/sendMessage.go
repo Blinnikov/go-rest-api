@@ -50,3 +50,24 @@ func sendMessage(ch *amqp.Channel, routingKey string, contentType string, msg []
 		})
 	failOnError(err, "Failed to publish a message")
 }
+
+func ReceiveMessage(ch *amqp.Channel, routingKey string) []string {
+	msgs, err := ch.Consume(
+		routingKey, // routing key
+		"",         // consumer
+		true,       // autoAck
+		false,      // exclusive
+		false,      // noLocal
+		false,      // noWait
+		nil,        // args
+	)
+
+	failOnError(err, "Failed to register a consumer")
+
+	var result []string
+	for msg := range msgs {
+		result = append(result, string(msg.Body))
+		log.Printf("Receiving message: %s", msg.Body)
+	}
+	return result
+}
