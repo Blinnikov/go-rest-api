@@ -29,6 +29,13 @@ func Start(config *Config, logger *logrus.Logger) error {
 	sessionStore := sessions.NewCookieStore([]byte(config.SessionKey))
 	srv := newServer(logger, store, sessionStore)
 
+	// Create queue on app start
+	conn, ch := bus.GetChannel(addr)
+	defer conn.Close()
+	defer ch.Close()
+	bus.GetQueue(queueName, ch)
+
+	// Start reading/publishing messages
 	go messageReceiver(logger)
 	go messageSender(logger)
 

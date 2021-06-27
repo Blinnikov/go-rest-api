@@ -22,7 +22,7 @@ func GetChannel(addr string) (*amqp.Connection, *amqp.Channel) {
 	return conn, ch
 }
 
-func getQueue(name string, ch *amqp.Channel) *amqp.Queue {
+func GetQueue(name string, ch *amqp.Channel) *amqp.Queue {
 	// We create a Queue to send the message to.
 	q, err := ch.QueueDeclare(
 		name,  // name
