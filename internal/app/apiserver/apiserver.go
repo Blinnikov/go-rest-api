@@ -11,6 +11,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// TODO: Get from configuration
+const addr string = "amqp://rabbitmq:rabbitmq@rabbit1:5672/"
+const queueName string = "go-reat-api-queue"
+
 func Start(config *Config, logger *logrus.Logger) error {
 	address := strings.Split(config.DatabaseURL, " password")[0]
 	logger.Printf("Starting apiserver with db %s", address)
@@ -34,23 +38,23 @@ func Start(config *Config, logger *logrus.Logger) error {
 }
 
 func messageSender(logger *logrus.Logger) {
-	conn, ch, q := bus.GetQueue()
+	conn, ch := bus.GetChannel(addr)
 	defer conn.Close()
 	defer ch.Close()
 
 	for {
 		msg := "Golang is awesome - Keep Moving Forward!"
-		bus.SendTextMessage(ch, q.Name, msg)
+		bus.SendTextMessage(ch, queueName, msg)
 		// logger.Printf(" [x] Congrats, sending message: %s", msg)
 	}
 }
 
 func messageReceiver(logger *logrus.Logger) {
-	conn, ch, q := bus.GetQueue()
+	conn, ch := bus.GetChannel(addr)
 	defer conn.Close()
 	defer ch.Close()
 
-	msgs := bus.ReceiveMessage(ch, q.Name)
+	msgs := bus.ReceiveMessage(ch, queueName)
 	for msg := range msgs {
 		logger.Printf("Received message from queue: %s", msg)
 	}

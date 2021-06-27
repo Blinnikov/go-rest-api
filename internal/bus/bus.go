@@ -12,26 +12,29 @@ func failOnError(err error, msg string) {
 	}
 }
 
-func GetQueue() (*amqp.Connection, *amqp.Channel, *amqp.Queue) {
-	// TODO: Get from configuration
-	conn, err := amqp.Dial("amqp://rabbitmq:rabbitmq@rabbit1:5672/")
+func GetChannel(addr string) (*amqp.Connection, *amqp.Channel) {
+	conn, err := amqp.Dial(addr)
 	failOnError(err, "Failed to connect to RabbitMQ")
 
 	ch, err := conn.Channel()
 	failOnError(err, "Failed to open a channel")
 
+	return conn, ch
+}
+
+func getQueue(name string, ch *amqp.Channel) *amqp.Queue {
 	// We create a Queue to send the message to.
 	q, err := ch.QueueDeclare(
-		"go-reat-api-queue", // name
-		false,               // durable
-		false,               // delete when unused
-		false,               // exclusive
-		false,               // no-wait
-		nil,                 // arguments
+		name,  // name
+		false, // durable
+		false, // delete when unused
+		false, // exclusive
+		false, // no-wait
+		nil,   // arguments
 	)
 	failOnError(err, "Failed to declare a queue")
 
-	return conn, ch, &q
+	return &q
 }
 
 func SendTextMessage(ch *amqp.Channel, routingKey string, msg string) {
