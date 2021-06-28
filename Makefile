@@ -1,6 +1,7 @@
 .PHONY: build
 build:
 	go build -v ./cmd/apiserver
+	go build -v ./cmd/citizen
 
 .PHONY: test
 test:

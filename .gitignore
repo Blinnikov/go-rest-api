@@ -15,5 +15,6 @@
 # vendor/
 
 /apiserver
+/citizen
 /k8s/api/crt-configmap.yaml
 /k8s/api/key-configmap.yaml
