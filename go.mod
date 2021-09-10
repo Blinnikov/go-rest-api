@@ -3,7 +3,7 @@ module github.com/blinnikov/go-rest-api
 go 1.16
 
 require (
-	github.com/BurntSushi/toml v0.4.0
+	github.com/BurntSushi/toml v0.4.1
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
 	github.com/felixge/httpsnoop v1.0.2 // indirect
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
@@ -12,12 +12,12 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/securecookie v1.1.1
 	github.com/gorilla/sessions v1.2.1
-	github.com/lib/pq v1.10.2
+	github.com/lib/pq v1.10.3
 	github.com/nullseed/logruseq v0.0.0-20191022112445-275e5c09bb04
 	github.com/sirupsen/logrus v1.8.1
 	github.com/streadway/amqp v1.0.0
 	github.com/stretchr/testify v1.7.0
-	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
-	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c // indirect
+	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5
+	golang.org/x/sys v0.0.0-20210910150752-751e447fb3d0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
