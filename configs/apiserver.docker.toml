@@ -1,6 +1,6 @@
 bind_addr = ":8443"
 log_level = "debug"
 database_url = "host=postgres dbname=restapi_dev sslmode=disable user=postgres password=changeme"
-seq_url = ""
-#seq_url = "http://seq:5341"
+#seq_url = ""
+seq_url = "http://seq:5341"
 session_key = "idunnowhattowritehere"

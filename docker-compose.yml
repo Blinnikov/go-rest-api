@@ -24,17 +24,17 @@ services:
   # It's CoreCLR problem that dpesn't support ARM architecture
   # Guys said they were waitnig for .Net 6 release in November 2021 to fix this
   # https://github.com/datalust/seq-tickets/discussions/1189
-  # seq:
-  #   container_name: seq
-  #   image: datalust/seq:preview
-  #   restart: unless-stopped
-  #   environment:
-  #     ACCEPT_EULA: Y
-  #   ports:
-  #     - 5341:80
-  #     - 5341
-  #   networks:
-  #     - restapi
+  seq:
+    container_name: seq
+    image: datalust/seq:2021.3.6410-pre
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - 5341:80
+      - 5341
+    networks:
+      - restapi
 
   rabbit1:
     image: "rabbitmq:management-alpine"
